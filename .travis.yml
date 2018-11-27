@@ -4,6 +4,5 @@ dotnet: 2.1.401
 install:
   - dotnet build Praktisk/Praktisk.sln
 script:
-  - dotnet test Trie.Tests
-  
+  - dotnet test Praktisk/*.Tests 
   
