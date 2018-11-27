@@ -1,0 +1,10 @@
+language: csharp
+mono: none
+dotnet: 2.1.401
+install:
+  - dotnet restore Praktisk.sln
+  - nuget install xunit.runners -Version 1.9.2 -OutputDirectory testrunner
+script:
+  - dotnet test Trie.Tests
+  
+  
