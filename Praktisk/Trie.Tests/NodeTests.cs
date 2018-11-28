@@ -38,7 +38,7 @@ namespace Trie.Tests
             var parentNode = new Node('b', NodeType.Final);
 
             //ACT & CHECK
-            Assert.Throws<ArgumentNullException>(() => parentNode.AddNode(null));            
+            Assert.Throws<ArgumentNullException>(() => parentNode.AddNode(null));
         }
 
         [Theory]
@@ -53,17 +53,17 @@ namespace Trie.Tests
             {
                 parentNode.AddNode(childNode);
             }
-            
+
             var nodeToRemove = childNodes.First();
             childNodes.Remove(nodeToRemove);
-            
+
             //ACT
             parentNode.RemoveNode(nodeToRemove);
-            
+
             //CHECK
-            parentNode.Children.ShouldBeEqualTo(childNodes); 
+            parentNode.Children.ShouldBeEqualTo(childNodes);
         }
-        
+
         [Fact]
         public void Test_RemoveEmptyNode_ExceptionThrown()
         {
@@ -71,7 +71,7 @@ namespace Trie.Tests
             var parentNode = new Node('b', NodeType.Final);
 
             //ACT & CHECK
-            Assert.Throws<ArgumentNullException>(() => parentNode.RemoveNode(null));            
+            Assert.Throws<ArgumentNullException>(() => parentNode.RemoveNode(null));
         }
     }
 }
