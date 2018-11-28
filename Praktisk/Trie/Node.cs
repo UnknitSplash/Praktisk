@@ -1,10 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
+[assembly:InternalsVisibleTo("Trie.Tests")]
 namespace Trie
 {
-    internal class Node : IEnumerable<Node>
+    internal class Node : IEnumerable<Node>, IComparable<Node>
     {
         private readonly HashSet<Node> _children = new HashSet<Node>();
         internal char Value { get; }
@@ -20,6 +23,11 @@ namespace Trie
 
         public Node AddNode(Node node)
         {
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+            
             _children.Add(node);
             return node;
         }
@@ -37,6 +45,11 @@ namespace Trie
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public int CompareTo(Node other)
+        {
+            return Equals(other) ? 0 : 1;
         }
 
         public override bool Equals(object obj)
