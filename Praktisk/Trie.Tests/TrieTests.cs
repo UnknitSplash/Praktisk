@@ -20,7 +20,7 @@ namespace Trie.Tests
             outputWords.AddRange(trie);
             //CHECK
         
-            outputWords.ShouldBeEqualTo(originalWords);
+            outputWords.ShouldBeEqualTo(originalWords.Distinct());
         }
 
         [Theory]
@@ -37,7 +37,7 @@ namespace Trie.Tests
             outputWords.AddRange(trie.ToList());
             
             //CHECK
-            outputWords.ShouldBeEqualTo(originalWords.Append(newWord));
+            outputWords.ShouldBeEqualTo(originalWords.Append(newWord).Distinct());
         }
         
         [Theory]
@@ -54,7 +54,7 @@ namespace Trie.Tests
             outputWords.AddRange(trie.ToList());
             
             //CHECK
-            outputWords.ShouldBeEqualTo(originalWords.Skip(1));
+            outputWords.ShouldBeEqualTo(originalWords.Skip(1).Distinct());
         }
         
         [Theory]
