@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
-[assembly:InternalsVisibleTo("Trie.Tests")]
+[assembly: InternalsVisibleTo("Trie.Tests")]
+
 namespace Trie
 {
     internal class Node : IEnumerable<Node>, IComparable<Node>
