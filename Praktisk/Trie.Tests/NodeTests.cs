@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Xunit;
 
 namespace Trie.Tests
@@ -72,6 +73,41 @@ namespace Trie.Tests
 
             //ACT & CHECK
             Assert.Throws<ArgumentNullException>(() => parentNode.RemoveNode(null));
+        }
+
+        [Theory]
+        [InlineData]
+        [MemberData(nameof(NodeTestData))]
+        public void Test_Enumerate_AllChildrenReturned(params object[] nodes)
+        {
+            //PREPARE
+            var childNodes = nodes.Select(n => (Node) n).ToList();
+            var parentNode = new Node('b', NodeType.Final);
+
+            foreach (var childNode in childNodes)
+            {
+                parentNode.AddNode(childNode);
+            }
+
+            //ACT
+            var returnedNodes = parentNode.ToList();
+
+            //CHECK
+            returnedNodes.ShouldBeEqualTo(childNodes);
+        }
+
+        [Fact]
+        public void Test_GetChildNodes_IReadOnlyCollectionReturned()
+        {
+            //PREPARE
+            var node = new Node(' ', NodeType.Intermediate);
+            node.AddNode(new Node('a', NodeType.Intermediate));
+
+            //ACT
+            node.Children.ToList().Clear();
+
+            //CHECK
+            node.Children.Should().HaveCount(1);
         }
     }
 }
