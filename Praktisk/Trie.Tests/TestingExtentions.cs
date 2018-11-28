@@ -14,6 +14,7 @@ namespace Trie.Tests
             var expectedList = expected.ToList();
             expectedList.Sort();
 
+            actualList.Should().HaveCount(expectedList.Count);
             actualList.Should().Equal(expectedList, (v1, v2) => v1.Equals(v2));
         }
     }
