@@ -8,7 +8,7 @@ namespace Trie.Tests
     public class TrieTests
     {
         [Theory]
-        [ClassData(typeof(TestData))]
+        [ClassData(typeof(WordsTestData))]
         public void Test_TrieEnumeration_Ctor_OutputWordsMatchInput(params string[] originalWords)
         {
             //PREPARE
@@ -24,7 +24,7 @@ namespace Trie.Tests
         }
 
         [Theory]
-        [ClassData(typeof(TestData))]
+        [ClassData(typeof(WordsTestData))]
         public void Test_TrieAddItem_EnumerateAllWords(params string[] originalWords)
         {
             //PREPARE
@@ -41,7 +41,7 @@ namespace Trie.Tests
         }
         
         [Theory]
-        [ClassData(typeof(TestData))]
+        [ClassData(typeof(WordsTestData))]
         public void Test_TrieRemoveItem_EnumerateAllOtherWords(params string[] originalWords)
         {
             //PREPARE
@@ -58,7 +58,7 @@ namespace Trie.Tests
         }
         
         [Theory]
-        [ClassData(typeof(TestData))]
+        [ClassData(typeof(WordsTestData))]
         public void Test_TrieContainsItem_ReturnsTrue(params string[] originalWords)
         {
             //PREPARE
@@ -73,7 +73,7 @@ namespace Trie.Tests
         }
         
         [Theory]
-        [ClassData(typeof(TestData))]
+        [ClassData(typeof(WordsTestData))]
         public void Test_TrieClear_EmptyTrie(params string[] originalWords)
         {
             //PREPARE
