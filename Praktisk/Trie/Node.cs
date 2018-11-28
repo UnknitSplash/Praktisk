@@ -10,7 +10,7 @@ namespace Trie
         internal char Value { get; }
 
         internal NodeType NodeType { get; set; }
-        internal List<Node> Children => _children.ToList();
+        internal IReadOnlyCollection<Node> Children => _children;
 
         public Node(char value, NodeType nodeType)
         {
