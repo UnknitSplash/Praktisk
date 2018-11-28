@@ -48,6 +48,16 @@ namespace Trie.Tests
             //ACT & CHECK
             Assert.Throws<ArgumentNullException>(() => parentNode.AddNode(null));
         }
+        
+        [Fact]
+        public void Test_AddRootNode_ExceptionThrown()
+        {
+            //PREPARE
+            var parentNode = new Node('b', NodeType.Final);
+
+            //ACT & CHECK
+            Assert.Throws<ArgumentException>(() => parentNode.AddNode(new Node(' ', NodeType.Root)));
+        }
 
         [Theory]
         [MemberData(nameof(NodeTestData))]
