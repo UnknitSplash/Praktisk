@@ -7,29 +7,29 @@ namespace Trie.Tests
 {
     public class TrieTests
     {
-        [Fact]
-        public void Test_TrieEnumeration_Ctor_OutputWordsMatchInput()
+        [Theory]
+        [ClassData(typeof(TestData))]
+        public void Test_TrieEnumeration_Ctor_OutputWordsMatchInput(params string[] originalWords)
         {
             //PREPARE
-            var inputWords = new[] {"word", "war", "world"};
             var outputWords = new List<string>();
             
             //ACT
-            var trie = new Trie(inputWords);
+            var trie = new Trie(originalWords);
 
             outputWords.AddRange(trie);
             //CHECK
-            outputWords.Should().BeEquivalentTo(inputWords);
+        
+            outputWords.ShouldBeEqualTo(originalWords);
         }
 
         [Theory]
         [ClassData(typeof(TestData))]
-        [InlineData("new", "old", "all", "always", "allocate")]
         public void Test_TrieAddItem_EnumerateAllWords(params string[] originalWords)
         {
             //PREPARE
             var trie = new Trie(originalWords);
-            var newWord = "alright";
+            var newWord = "alrighty";
             var outputWords = new List<string>();
             
             //ACT
@@ -37,12 +37,11 @@ namespace Trie.Tests
             outputWords.AddRange(trie.ToList());
             
             //CHECK
-            outputWords.Should().BeEquivalentTo(originalWords.Append(newWord));
+            outputWords.ShouldBeEqualTo(originalWords.Append(newWord));
         }
         
         [Theory]
         [ClassData(typeof(TestData))]
-        [InlineData("new", "old", "all", "always", "allocate")]
         public void Test_TrieRemoveItem_EnumerateAllOtherWords(params string[] originalWords)
         {
             //PREPARE
@@ -55,12 +54,11 @@ namespace Trie.Tests
             outputWords.AddRange(trie.ToList());
             
             //CHECK
-            outputWords.Should().BeEquivalentTo(originalWords.Skip(1));
+            outputWords.ShouldBeEqualTo(originalWords.Skip(1));
         }
         
         [Theory]
         [ClassData(typeof(TestData))]
-        [InlineData("new", "old", "all", "always", "allocate")]
         public void Test_TrieContainsItem_ReturnsTrue(params string[] originalWords)
         {
             //PREPARE
@@ -76,7 +74,6 @@ namespace Trie.Tests
         
         [Theory]
         [ClassData(typeof(TestData))]
-        [InlineData("new", "old", "all", "always", "allocate")]
         public void Test_TrieClear_EmptyTrie(params string[] originalWords)
         {
             //PREPARE

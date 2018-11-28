@@ -33,8 +33,11 @@ namespace Trie
                               currentNode.AddNode(new Node(letter, NodeType.Intermediate));
             }
 
-            currentNode.NodeType = NodeType.Final;
-            _wordCount++;
+            if (currentNode.NodeType != NodeType.Final)
+            {
+                currentNode.NodeType = NodeType.Final;
+                _wordCount++;
+            }
         }
 
         public IEnumerator<string> GetEnumerator()
@@ -97,33 +100,32 @@ namespace Trie
                     return t.previousNodes.Append(t.currentNode).ToArray();
                 }).SingleOrDefault();
 
-            if (nodes == null)
+            var nodesCount = nodes?.Length ?? 0;
+            
+            if (nodesCount == 0)
             {
                 return false;
             }
 
-            var nodesCount = nodes.Length;
-
-            for (var i = nodesCount - 1; i > 0; i--)
+            for (var i = nodesCount - 1; i >= 0; i--)
             {
-                var currentNode = nodes[i];
+                var currentNode = nodes?[i];
 
-                if (currentNode.NodeType != NodeType.Intermediate)
+                if (currentNode?.NodeType != NodeType.Intermediate)
                 {
                     break;
                 }
 
                 if (currentNode.Children.Count == 0)
                 {
-                    var parentNode = nodes[i - 1];
+                    var parentNode = i == 0 ? _root : nodes[i - 1];
                     parentNode.RemoveNode(nodes[i]);
                 }
             }
 
-            _root.RemoveNode(nodes[0]);
             _wordCount--;
 
-            return nodesCount > 0;
+            return true;
         }
 
         public int Count => _wordCount;
