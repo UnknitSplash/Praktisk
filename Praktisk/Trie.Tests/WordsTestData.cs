@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Trie.Tests
 {
-    public class TestData : IEnumerable<object[]>
+    public class WordsTestData : IEnumerable<object[]>
     {
         private static readonly string[] TestWords = File.ReadAllText("TestDataWords").Split('\n');
 
