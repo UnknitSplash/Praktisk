@@ -34,6 +34,11 @@ namespace Trie
 
         public bool RemoveNode(Node node)
         {
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+            
             return _children.Remove(node);
         }
 
