@@ -13,6 +13,13 @@ namespace Trie.Tests
             new object[] {new Node('a', NodeType.Final)},
             new object[] {new Node('a', NodeType.Final), new Node('b', NodeType.Intermediate)}
         };
+        
+        public static IEnumerable<object[]> NodeEqualityTestData = new List<object[]>
+        {
+            new object[] {new Node('a', NodeType.Final), null, false},
+            new object[] {new Node('a', NodeType.Final), new Node('b', NodeType.Intermediate), false},
+            new object[] {new Node('a', NodeType.Final), new Node('a', NodeType.Final), true}
+        };
 
         [Theory]
         [MemberData(nameof(NodeTestData))]
@@ -108,6 +115,34 @@ namespace Trie.Tests
 
             //CHECK
             node.Children.Should().HaveCount(1);
+        }
+
+        [Theory]
+        [MemberData(nameof(NodeEqualityTestData))]
+        public void Test_CompareNodes_EqualIfValueAndTypeAreTheSame(object node1, object node2, bool areEqual)
+        {
+            //PREPARE
+            var nodeA = (Node) node1;
+            var nodeB = (Node) node2;
+            //ACT
+            var actualEquality = nodeA.Equals(nodeB);
+
+            //CHECK
+            actualEquality.Should().Be(areEqual);
+        }
+        
+        [Theory]
+        [MemberData(nameof(NodeEqualityTestData))]
+        public void Test_CompareHashCodes_EqualIfValueAndTypeAreTheSame(object node1, object node2, bool areEqual)
+        {
+            //PREPARE
+            var nodeA = (Node) node1;
+            var nodeB = (Node) node2;
+            //ACT
+            var actualEquality = nodeA.GetHashCode() == (nodeB?.GetHashCode() ?? 0);
+
+            //CHECK
+            actualEquality.Should().Be(areEqual);
         }
     }
 }

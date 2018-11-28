@@ -70,7 +70,7 @@ namespace Trie
 
         public override int GetHashCode()
         {
-            return Value.GetHashCode() | _children.GetHashCode();
+            return Value.GetHashCode() * 17 + _children.Sum(n => n.GetHashCode());
         }
     }
 
