@@ -28,7 +28,12 @@ namespace Trie
             {
                 throw new ArgumentNullException(nameof(node));
             }
-            
+
+            if (node.NodeType == NodeType.Root)
+            {
+                throw new ArgumentException("Can't add a Root Node");
+            }
+
             _children.Add(node);
             return node;
         }
@@ -39,7 +44,7 @@ namespace Trie
             {
                 throw new ArgumentNullException(nameof(node));
             }
-            
+
             return _children.Remove(node);
         }
 
