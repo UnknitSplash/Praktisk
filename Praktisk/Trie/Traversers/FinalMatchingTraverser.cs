@@ -29,12 +29,13 @@ namespace Trie.Traversers
                     }
                 }
 
-                foreach (var child in node)
+                var children = node.Children as List<Node>;
+                for (var i = 0; i < children?.Count; i++)
                 {
                     var childPreviousNodes = new List<Node>(previousNodes);
                     childPreviousNodes.Add(node);
 
-                    foreach (var childNodes in GetNodes(child, childPreviousNodes, ++depth))
+                    foreach (var childNodes in GetNodes(children[i], childPreviousNodes, ++depth))
                     {
                         yield return childNodes;
                     }

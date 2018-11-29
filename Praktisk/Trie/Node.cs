@@ -10,7 +10,7 @@ namespace Trie
 {
     internal class Node : IEnumerable<Node>, IComparable<Node>
     {
-        private readonly HashSet<Node> _children = new HashSet<Node>();
+        private readonly List<Node> _children = new List<Node>();
         internal char Value { get; }
 
         internal NodeType NodeType { get; set; }
