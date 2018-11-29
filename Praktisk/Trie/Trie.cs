@@ -19,19 +19,26 @@ namespace Trie
 
         public Trie(IEnumerable<string> words)
         {
-            foreach (var word in words)
+            if (words == null)
             {
-                AddWord(word);
+                throw new ArgumentNullException(nameof(words));
+            }
+
+            var items = words as string[];
+            
+            for (var i = 0; i < items?.Length; i++)
+            {
+                AddWord(items[i]);
             }
         }
 
         private void AddWord(string word)
         {
             var currentNode = _root;
-            foreach (var letter in word)
+            for (var i = 0; i < word.Length; i++)
             {
-                currentNode = currentNode.Children.FirstOrDefault(n => n.Value == letter) ??
-                              currentNode.AddNode(new Node(letter, NodeType.Intermediate));
+                currentNode = currentNode.Children.FirstOrDefault(n => n.Value == word[i]) ??
+                              currentNode.AddNode(new Node(word[i], NodeType.Intermediate));
             }
 
             if (currentNode.NodeType != NodeType.Final)
