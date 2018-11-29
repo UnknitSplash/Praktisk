@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,7 +74,7 @@ namespace Trie
                 return false;
             }
 
-            var traverser = new FinalMatchingTraverser(_root, item);
+            var traverser = new FinalMatchingTraverser(_root, item.ToCharArray(), Find.First);
             return traverser.Go().Any();
         }
 
@@ -91,7 +92,12 @@ namespace Trie
 
         public bool Remove(string item)
         {
-            var traverser = new FinalMatchingTraverser(_root, item);
+            if (string.IsNullOrEmpty(item))
+            {
+                return true;
+            }
+            
+            var traverser = new FinalMatchingTraverser(_root, item.ToCharArray(), Find.First);
 
             var nodes =
                 traverser.Go().Select(t =>
