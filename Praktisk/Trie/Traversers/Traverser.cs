@@ -41,7 +41,7 @@ namespace Trie.Traversers
 
                 foreach (var childNodes in GetNodes(child, childPreviousNodes))
                 {
-                    if (_predicates.All(p => p(childNodes.currentNode, childNodes.previousNodes))) yield return childNodes;
+                     yield return childNodes;
                 }
             }
 
