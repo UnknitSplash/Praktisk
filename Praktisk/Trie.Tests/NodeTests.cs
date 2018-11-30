@@ -38,7 +38,7 @@ namespace Trie.Tests
             }
 
             //CHECK
-            parentNode.Children.ShouldBeEqualTo(childNodes);
+            parentNode.Children.Values.ShouldBeEqualTo(childNodes);
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace Trie.Tests
             parentNode.RemoveNode(nodeToRemove);
 
             //CHECK
-            parentNode.Children.ShouldBeEqualTo(childNodes);
+            parentNode.Children.Values.ShouldBeEqualTo(childNodes);
         }
 
         [Fact]
