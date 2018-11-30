@@ -8,17 +8,19 @@ namespace Trie.Tests
 {
     public class NodeTests
     {
+        private static Node _parent = new Node('a', NodeType.Root, null);
+
         public static IEnumerable<object[]> NodeTestData = new List<object[]>
         {
-            new object[] {new Node('a', NodeType.Final)},
-            new object[] {new Node('a', NodeType.Final), new Node('b', NodeType.Intermediate)}
+            new object[] {new Node('a', NodeType.Final, _parent)},
+            new object[] {new Node('a', NodeType.Final, _parent), new Node('b', NodeType.Intermediate, _parent)}
         };
-        
+
         public static IEnumerable<object[]> NodeEqualityTestData = new List<object[]>
         {
-            new object[] {new Node('a', NodeType.Final), null, false},
-            new object[] {new Node('a', NodeType.Final), new Node('b', NodeType.Intermediate), false},
-            new object[] {new Node('a', NodeType.Final), new Node('a', NodeType.Final), true}
+            new object[] {new Node('a', NodeType.Final, _parent), _parent, false},
+            new object[] {new Node('a', NodeType.Final, _parent), new Node('b', NodeType.Intermediate, _parent), false},
+            new object[] {new Node('a', NodeType.Final, _parent), new Node('a', NodeType.Final, _parent), true}
         };
 
         [Theory]
@@ -27,7 +29,7 @@ namespace Trie.Tests
         {
             //PREPARE
             var childNodes = nodes.Select(n => (Node) n).ToArray();
-            var parentNode = new Node('b', NodeType.Final);
+            var parentNode = new Node('b', NodeType.Final, _parent);
 
             //ACT
             foreach (var childNode in childNodes)
@@ -43,7 +45,7 @@ namespace Trie.Tests
         public void Test_AddEmptyNode_ExceptionThrown()
         {
             //PREPARE
-            var parentNode = new Node('b', NodeType.Final);
+            var parentNode = new Node('b', NodeType.Final, _parent);
 
             //ACT & CHECK
             Assert.Throws<ArgumentNullException>(() => parentNode.AddNode(null));
@@ -53,10 +55,10 @@ namespace Trie.Tests
         public void Test_AddRootNode_ExceptionThrown()
         {
             //PREPARE
-            var parentNode = new Node('b', NodeType.Final);
+            var parentNode = new Node('b', NodeType.Final, _parent);
 
             //ACT & CHECK
-            Assert.Throws<ArgumentException>(() => parentNode.AddNode(new Node(' ', NodeType.Root)));
+            Assert.Throws<ArgumentException>(() => parentNode.AddNode(new Node(' ', NodeType.Root, _parent)));
         }
 
         [Theory]
@@ -65,7 +67,7 @@ namespace Trie.Tests
         {
             //PREPARE
             var childNodes = nodes.Select(n => (Node) n).ToList();
-            var parentNode = new Node('b', NodeType.Final);
+            var parentNode = new Node('b', NodeType.Final, _parent);
 
             foreach (var childNode in childNodes)
             {
@@ -86,7 +88,8 @@ namespace Trie.Tests
         public void Test_RemoveEmptyNode_ExceptionThrown()
         {
             //PREPARE
-            var parentNode = new Node('b', NodeType.Final);
+            _parent = new Node('a', NodeType.Root, _parent);
+            var parentNode = new Node('b', NodeType.Final, _parent);
 
             //ACT & CHECK
             Assert.Throws<ArgumentNullException>(() => parentNode.RemoveNode(null));
@@ -99,7 +102,7 @@ namespace Trie.Tests
         {
             //PREPARE
             var childNodes = nodes.Select(n => (Node) n).ToList();
-            var parentNode = new Node('b', NodeType.Final);
+            var parentNode = new Node('b', NodeType.Final, _parent);
 
             foreach (var childNode in childNodes)
             {
@@ -117,8 +120,8 @@ namespace Trie.Tests
         public void Test_GetChildNodes_IReadOnlyCollectionReturned()
         {
             //PREPARE
-            var node = new Node(' ', NodeType.Intermediate);
-            node.AddNode(new Node('a', NodeType.Intermediate));
+            var node = new Node(' ', NodeType.Intermediate, _parent);
+            node.AddNode(new Node('a', NodeType.Intermediate, _parent));
 
             //ACT
             node.Children.ToList().Clear();
