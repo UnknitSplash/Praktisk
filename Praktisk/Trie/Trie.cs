@@ -12,7 +12,7 @@ namespace Trie
 
         private static Node NewRoot()
         {
-            return new Node(' ', NodeType.Root);
+            return new Node(' ', NodeType.Root, null);
         }
 
         private int _wordCount;
@@ -38,7 +38,7 @@ namespace Trie
             for (var i = 0; i < word.Length; i++)
             {
                 currentNode = currentNode.Children.FirstOrDefault(n => n.Value == word[i]) ??
-                              currentNode.AddNode(new Node(word[i], NodeType.Intermediate));
+                              currentNode.AddNode(new Node(word[i], NodeType.Intermediate, currentNode));
             }
 
             if (currentNode.NodeType != NodeType.Final)
@@ -54,7 +54,7 @@ namespace Trie
 
             foreach (var node in traverser.Go())
             {
-                yield return new Word(true, node.previousNodes.Select(n => n.Value).Append(node.currentNode.Value));
+                yield return new Word(true, node.GetPrecursiveNodes().Reverse().Select(n => n.Value));
             }
         }
 
@@ -109,8 +109,8 @@ namespace Trie
             var nodes =
                 traverser.Go().Select(t =>
                 {
-                    t.currentNode.NodeType = NodeType.Intermediate;
-                    return t.previousNodes.Append(t.currentNode).ToArray();
+                    t.NodeType = NodeType.Intermediate;
+                    return t.GetPrecursiveNodes().Reverse().ToArray();
                 }).SingleOrDefault();
 
             var nodesCount = nodes?.Length ?? 0;

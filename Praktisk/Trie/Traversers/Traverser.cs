@@ -13,19 +13,17 @@ namespace Trie.Traversers
             _root = root;
         }
 
-        public IEnumerable<(Node currentNode, IEnumerable<Node> previousNodes)> Go()
+        public IEnumerable<Node> Go()
         {
             foreach (var rootChildNode in _root)
             {
-                foreach (var node in GetNodes(rootChildNode, new List<Node>(), 0))
+                foreach (var node in GetNodes(rootChildNode, 0))
                 {
                     yield return node;
                 }
             }
         }
 
-        protected abstract IEnumerable<(Node currentNode, IEnumerable<Node> previousNodes)> GetNodes(Node node,
-            IList<Node> previousNodes, int depth);
-
+        protected abstract IEnumerable<Node> GetNodes(Node node, int depth);
     }
 }
