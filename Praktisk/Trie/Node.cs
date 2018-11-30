@@ -24,10 +24,21 @@ namespace Trie
             {
                 throw new ArgumentNullException(nameof(parent));
             }
-            
+
             Value = value;
             NodeType = nodeType;
             _parent = parent;
+        }
+
+        public IEnumerable<Node> GetPrecursiveNodes()
+        {
+            var current = this;
+            yield return current;
+            while (current._parent.NodeType != NodeType.Root)
+            {
+                current = current._parent;
+                yield return current;
+            }
         }
 
         public Node AddNode(Node node)

@@ -8,20 +8,16 @@ namespace Trie.Traversers
         {
         }
 
-        protected override IEnumerable<(Node currentNode, IEnumerable<Node> previousNodes)> GetNodes(Node node,
-            IList<Node> previousNodes, int depth)
+        protected override IEnumerable<Node> GetNodes(Node node, int depth)
         {
             if (node.NodeType == NodeType.Final)
             {
-                yield return (node, previousNodes);
+                yield return node;
             }
 
             foreach (var child in node)
             {
-                var childPreviousNodes = new List<Node>(previousNodes);
-                childPreviousNodes.Add(node);
-
-                foreach (var childNodes in GetNodes(child, childPreviousNodes, ++depth))
+                foreach (var childNodes in GetNodes(child, ++depth))
                 {
                     yield return childNodes;
                 }

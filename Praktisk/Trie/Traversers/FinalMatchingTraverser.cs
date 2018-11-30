@@ -16,13 +16,13 @@ namespace Trie.Traversers
             _find = find;
         }
 
-        protected override IEnumerable<(Node currentNode, IEnumerable<Node> previousNodes)> GetNodes(Node node, IList<Node> previousNodes, int depth)
+        protected override IEnumerable<Node> GetNodes(Node node, int depth)
         {
             if (depth < _wordLength && _word[depth] == node.Value)
             {
                 if (node.NodeType == NodeType.Final)
                 {
-                    yield return (node, previousNodes);
+                    yield return node;
                     if (_find == Find.First)
                     {
                         yield break;
@@ -32,10 +32,7 @@ namespace Trie.Traversers
                 var children = node.Children as List<Node>;
                 for (var i = 0; i < children?.Count; i++)
                 {
-                    var childPreviousNodes = new List<Node>(previousNodes);
-                    childPreviousNodes.Add(node);
-
-                    foreach (var childNodes in GetNodes(children[i], childPreviousNodes, ++depth))
+                    foreach (var childNodes in GetNodes(children[i], ++depth))
                     {
                         yield return childNodes;
                     }
