@@ -76,14 +76,25 @@ namespace Trie
 
         public bool Contains(string item)
         {
+            return ContainsItemOfType(item, NodeType.Final);
+        }
+
+        public bool ContainsPrefix(string item)
+        {
+            return ContainsItemOfType(item, NodeType.Intermediate | NodeType.Final);
+        }
+        
+        private bool ContainsItemOfType(string item, NodeType nodeType)
+        {
             if (string.IsNullOrEmpty(item))
             {
                 return false;
             }
 
-            var traverser = new FinalMatchingTraverser(_root, item.ToCharArray(), Find.First);
+            var traverser = new MatchingTraverser(_root, item.ToCharArray(), Find.First, nodeType);
             return traverser.Go().Any();
         }
+
 
         public void CopyTo(string[] array, int arrayIndex)
         {
@@ -104,7 +115,7 @@ namespace Trie
                 return true;
             }
             
-            var traverser = new FinalMatchingTraverser(_root, item.ToCharArray(), Find.First);
+            var traverser = new MatchingTraverser(_root, item.ToCharArray(), Find.First, NodeType.Final);
 
             var nodes =
                 traverser.Go().Select(t =>
