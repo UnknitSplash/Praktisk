@@ -105,6 +105,7 @@ namespace Trie
         }
     }
 
+    [Flags]
     internal enum NodeType
     {
         Root,
