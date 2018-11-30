@@ -15,7 +15,6 @@ namespace Trie
         internal char Value { get; }
 
         internal NodeType NodeType { get; set; }
-        internal Node Parent { get; set; }
         internal IReadOnlyCollection<Node> Children => _children;
 
         public Node(char value, NodeType nodeType, Node parent)
