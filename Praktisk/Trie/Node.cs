@@ -100,7 +100,8 @@ namespace Trie
 
         public override int GetHashCode()
         {
-            return Value.GetHashCode() * 17 + _children.Sum(n => n.GetHashCode());
+            // ReSharper disable once NonReadonlyMemberInGetHashCode
+            return (int)NodeType + Value.GetHashCode() * 17;
         }
     }
 
