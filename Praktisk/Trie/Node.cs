@@ -10,16 +10,24 @@ namespace Trie
 {
     internal class Node : IEnumerable<Node>, IComparable<Node>
     {
+        private Node _parent;
         private readonly List<Node> _children = new List<Node>();
         internal char Value { get; }
 
         internal NodeType NodeType { get; set; }
+        internal Node Parent { get; set; }
         internal IReadOnlyCollection<Node> Children => _children;
 
-        public Node(char value, NodeType nodeType)
+        public Node(char value, NodeType nodeType, Node parent)
         {
+            if (parent == null && nodeType != NodeType.Root)
+            {
+                throw new ArgumentNullException(nameof(parent));
+            }
+            
             Value = value;
             NodeType = nodeType;
+            _parent = parent;
         }
 
         public Node AddNode(Node node)
@@ -46,6 +54,11 @@ namespace Trie
             }
 
             return _children.Remove(node);
+        }
+
+        public void RemoveParent()
+        {
+            _parent = null;
         }
 
         public IEnumerator<Node> GetEnumerator()
