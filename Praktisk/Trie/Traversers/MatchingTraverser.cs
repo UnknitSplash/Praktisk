@@ -31,10 +31,12 @@ namespace Trie.Traversers
                     }
                 }
 
-                var children = node.Children as List<Node>;
-                for (var i = 0; i < children?.Count; i++)
+                var children = node.Children as Dictionary<char, Node>;
+                if (children?.Count > 0)
                 {
-                    foreach (var childNodes in GetNodes(children[i], ++depth))
+                    depth++;
+
+                    foreach (var childNodes in GetNodes(children[_word[depth]], depth))
                     {
                         yield return childNodes;
                     }

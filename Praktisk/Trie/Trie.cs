@@ -25,7 +25,7 @@ namespace Trie
             }
 
             var items = words as string[];
-            
+
             for (var i = 0; i < items?.Length; i++)
             {
                 AddWord(items[i]);
@@ -37,8 +37,9 @@ namespace Trie
             var currentNode = _root;
             for (var i = 0; i < word.Length; i++)
             {
-                currentNode = currentNode.Children.FirstOrDefault(n => n.Value == word[i]) ??
-                              currentNode.AddNode(new Node(word[i], NodeType.Intermediate, currentNode));
+                currentNode = currentNode.Children.TryGetValue(word[i], out var existingNode)
+                    ? existingNode
+                    : currentNode.AddNode(new Node(word[i], NodeType.Intermediate, currentNode));
             }
 
             if (currentNode.NodeType != NodeType.Final)
@@ -83,7 +84,7 @@ namespace Trie
         {
             return ContainsItemOfType(item, NodeType.Intermediate | NodeType.Final);
         }
-        
+
         private bool ContainsItemOfType(string item, NodeType nodeType)
         {
             if (string.IsNullOrEmpty(item))
@@ -114,7 +115,7 @@ namespace Trie
             {
                 return true;
             }
-            
+
             var traverser = new MatchingTraverser(_root, item.ToCharArray(), Find.First, NodeType.Final);
 
             var nodes =
@@ -125,7 +126,7 @@ namespace Trie
                 }).SingleOrDefault();
 
             var nodesCount = nodes?.Length ?? 0;
-            
+
             if (nodesCount == 0)
             {
                 return false;

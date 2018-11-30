@@ -11,11 +11,11 @@ namespace Trie
     internal class Node : IEnumerable<Node>, IComparable<Node>
     {
         private Node _parent;
-        private readonly List<Node> _children = new List<Node>();
+        private readonly Dictionary<char, Node> _children = new Dictionary<char, Node>();
         internal char Value { get; }
 
         internal NodeType NodeType { get; set; }
-        internal IReadOnlyCollection<Node> Children => _children;
+        internal IReadOnlyDictionary<char, Node> Children => _children;
 
         public Node(char value, NodeType nodeType, Node parent)
         {
@@ -52,7 +52,7 @@ namespace Trie
                 throw new ArgumentException("Can't add a Root Node");
             }
 
-            _children.Add(node);
+            _children.Add(node.Value, node);
             return node;
         }
 
@@ -63,7 +63,7 @@ namespace Trie
                 throw new ArgumentNullException(nameof(node));
             }
 
-            return _children.Remove(node);
+            return _children.Remove(node.Value);
         }
 
         public void RemoveParent()
@@ -73,7 +73,7 @@ namespace Trie
 
         public IEnumerator<Node> GetEnumerator()
         {
-            return _children.GetEnumerator();
+            return _children.Values.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
