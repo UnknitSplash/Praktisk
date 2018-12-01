@@ -8,6 +8,17 @@ namespace Trie.Traversers
         {
         }
 
+        public override IEnumerable<Node> Go()
+        {
+            foreach (var rootChildNode in _root)
+            {
+                foreach (var node in GetNodes(rootChildNode, 0))
+                {
+                    yield return node;
+                }
+            }
+        }
+
         protected override IEnumerable<Node> GetNodes(Node node, int depth)
         {
             if (node.NodeType == NodeType.Final)

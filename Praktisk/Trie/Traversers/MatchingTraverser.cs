@@ -18,6 +18,14 @@ namespace Trie.Traversers
             _nodeType = nodeType;
         }
 
+        public override IEnumerable<Node> Go()
+        {
+            foreach (var node in GetNodes(_root.Children[_word[0]], 0))
+            {
+                yield return node;
+            }
+        }
+
         protected override IEnumerable<Node> GetNodes(Node node, int depth)
         {
             if (depth < _wordLength && _word[depth] == node.Value)
