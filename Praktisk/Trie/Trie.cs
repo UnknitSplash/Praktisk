@@ -34,6 +34,11 @@ namespace Trie
 
         private void AddWord(string word)
         {
+            if (word.Length == 0)
+            {
+                throw new ArgumentException("Can't add an empty word.");
+            }
+            
             var currentNode = _root;
             for (var i = 0; i < word.Length; i++)
             {
@@ -41,7 +46,7 @@ namespace Trie
                     ? existingNode
                     : currentNode.AddNode(new Node(word[i], NodeType.Intermediate, currentNode));
             }
-
+            
             if (currentNode.NodeType != NodeType.Final)
             {
                 currentNode.NodeType = NodeType.Final;
