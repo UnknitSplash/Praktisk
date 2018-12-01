@@ -92,8 +92,9 @@ namespace Trie
                 return false;
             }
 
-            var traverser = new MatchingTraverser(_root, item.ToCharArray(), Find.First, nodeType);
-            return traverser.Go().Any();
+            var charArray = item.ToCharArray();
+            var traverser = new MatchingTraverser(_root, charArray, Find.First, nodeType);
+            return traverser.GetNodes(_root.Children[charArray[0]], 0).Any();
         }
 
 

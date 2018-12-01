@@ -15,6 +15,6 @@ namespace Trie.Traversers
 
         public abstract IEnumerable<Node> Go();
 
-        protected abstract IEnumerable<Node> GetNodes(Node node, int depth);
+        public abstract IEnumerable<Node> GetNodes(Node node, int depth);
     }
 }

@@ -19,7 +19,7 @@ namespace Trie.Traversers
             }
         }
 
-        protected override IEnumerable<Node> GetNodes(Node node, int depth)
+        public override IEnumerable<Node> GetNodes(Node node, int depth)
         {
             if (node.NodeType == NodeType.Final)
             {
