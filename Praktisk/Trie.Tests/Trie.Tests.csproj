@@ -18,7 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="TestDataWords">
+      <None Update="TestDataWords50k">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>
