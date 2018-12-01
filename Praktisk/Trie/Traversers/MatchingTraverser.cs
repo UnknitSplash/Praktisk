@@ -26,7 +26,8 @@ namespace Trie.Traversers
             }
         }
 
-        protected override IEnumerable<Node> GetNodes(Node node, int depth)
+        //TODO Try rewrite using while-loop, to get rid of foreach.
+        public override IEnumerable<Node> GetNodes(Node node, int depth)
         {
             if (depth < _wordLength && _word[depth] == node.Value)
             {
@@ -40,11 +41,10 @@ namespace Trie.Traversers
                 }
 
                 var children = node.Children as Dictionary<char, Node>;
-                if (children?.Count > 0)
+                depth++;
+                if (children?.Count > 0 && children.TryGetValue(_word[depth], out var nextNode))
                 {
-                    depth++;
-
-                    foreach (var childNodes in GetNodes(children[_word[depth]], depth))
+                    foreach (var childNodes in GetNodes(nextNode, depth))
                     {
                         yield return childNodes;
                     }
