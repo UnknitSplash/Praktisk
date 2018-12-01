@@ -38,7 +38,7 @@ namespace Trie.Traversers
 
                     var children = node.Children as Dictionary<char, Node>;
                     depth++;
-                    if (children?.Count > 0 && children.TryGetValue(_word[depth], out var nextNode))
+                    if (children?.Count > 0 && depth < _wordLength && children.TryGetValue(_word[depth], out var nextNode))
                     {
                         node = nextNode;
                     }
