@@ -18,35 +18,33 @@ namespace Trie.Traversers
             _nodeType = nodeType;
         }
 
-        public override IEnumerable<Node> Go()
+        public override IEnumerable<Node> GetNodes()
         {
-            foreach (var node in GetNodes(_root.Children[_word[0]], 0))
-            {
-                yield return node;
-            }
-        }
+            var depth = 0;
+            var node = _root.Children[_word[depth]];
 
-        //TODO Try rewrite using while-loop, to get rid of foreach.
-        public override IEnumerable<Node> GetNodes(Node node, int depth)
-        {
-            if (depth < _wordLength && _word[depth] == node.Value)
+            while (true)
             {
-                if (node.NodeType == (node.NodeType & _nodeType))
+                if (depth < _wordLength && _word[depth] == node.Value)
                 {
-                    yield return node;
-                    if (_find == Find.First)
+                    if (node.NodeType == (node.NodeType & _nodeType))
+                    {
+                        yield return node;
+                        if (_find == Find.First)
+                        {
+                            yield break;
+                        }
+                    }
+
+                    var children = node.Children as Dictionary<char, Node>;
+                    depth++;
+                    if (children?.Count > 0 && children.TryGetValue(_word[depth], out var nextNode))
+                    {
+                        node = nextNode;
+                    }
+                    else
                     {
                         yield break;
-                    }
-                }
-
-                var children = node.Children as Dictionary<char, Node>;
-                depth++;
-                if (children?.Count > 0 && children.TryGetValue(_word[depth], out var nextNode))
-                {
-                    foreach (var childNodes in GetNodes(nextNode, depth))
-                    {
-                        yield return childNodes;
                     }
                 }
             }

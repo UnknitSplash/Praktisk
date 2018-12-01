@@ -13,8 +13,6 @@ namespace Trie.Traversers
             _root = root;
         }
 
-        public abstract IEnumerable<Node> Go();
-
-        public abstract IEnumerable<Node> GetNodes(Node node, int depth);
+        public abstract IEnumerable<Node> GetNodes();
     }
 }

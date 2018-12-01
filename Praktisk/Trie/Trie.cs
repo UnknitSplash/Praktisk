@@ -51,9 +51,9 @@ namespace Trie
 
         public IEnumerator<string> GetEnumerator()
         {
-            var traverser = new FinalTraverser(_root);
+            var traverser = new FinalTraverser(_root, NodeType.Final);
 
-            foreach (var node in traverser.Go())
+            foreach (var node in traverser.GetNodes())
             {
                 yield return new Word(true, node.GetPrecursiveNodes().Reverse().Select(n => n.Value));
             }
@@ -94,7 +94,7 @@ namespace Trie
 
             var charArray = item.ToCharArray();
             var traverser = new MatchingTraverser(_root, charArray, Find.First, nodeType);
-            return traverser.GetNodes(_root.Children[charArray[0]], 0).Any();
+            return traverser.GetNodes().Any();
         }
 
 
@@ -120,7 +120,7 @@ namespace Trie
             var traverser = new MatchingTraverser(_root, item.ToCharArray(), Find.First, NodeType.Final);
 
             var nodes =
-                traverser.Go().Select(t =>
+                traverser.GetNodes().Select(t =>
                 {
                     t.NodeType = NodeType.Intermediate;
                     return t.GetPrecursiveNodes().Reverse().ToArray();
