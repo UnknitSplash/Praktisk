@@ -38,7 +38,7 @@ namespace Trie
             {
                 throw new ArgumentException("Can't add an empty word.");
             }
-            
+
             var currentNode = _root;
             for (var i = 0; i < word.Length; i++)
             {
@@ -46,7 +46,7 @@ namespace Trie
                     ? existingNode
                     : currentNode.AddNode(new Node(word[i], NodeType.Intermediate, currentNode));
             }
-            
+
             if (currentNode.NodeType != NodeType.Final)
             {
                 currentNode.NodeType = NodeType.Final;
@@ -98,8 +98,20 @@ namespace Trie
             }
 
             var charArray = item.ToCharArray();
-            var traverser = new MatchingTraverser(_root, charArray, Find.First, nodeType);
+            var traverser = new MatchingTraverser(_root, charArray, nodeType);
             return traverser.GetNodes().Any();
+        }
+
+        public string GetByPrefix(string item)
+        {
+            if (string.IsNullOrEmpty(item))
+            {
+                return "";
+            }
+
+            var traverser = new MatchingTraverser(_root, item.ToCharArray(), NodeType.Final);
+            return new string(traverser.GetNodes().FirstOrDefault()?.GetPrecursiveNodes().Select(t => t.Value).Reverse()
+                .ToArray());
         }
 
 
@@ -119,19 +131,22 @@ namespace Trie
         {
             if (string.IsNullOrEmpty(item))
             {
-                return true;
+                return false;
             }
 
-            var traverser = new MatchingTraverser(_root, item.ToCharArray(), Find.First, NodeType.Final);
+            var traverser = new MatchingTraverser(_root, item.ToCharArray(), NodeType.Final);
 
-            var nodes =
-                traverser.GetNodes().Select(t =>
-                {
-                    t.NodeType = NodeType.Intermediate;
-                    return t.GetPrecursiveNodes().Reverse().ToArray();
-                }).SingleOrDefault();
+            var node =
+                traverser.GetNodes().FirstOrDefault();
+            node.NodeType = NodeType.Intermediate;
+            var nodes = node?.GetPrecursiveNodes().Reverse().ToArray();
+//            var nodes = node?.Select(t =>
+//            {
+//                t.NodeType = NodeType.Intermediate;
+//                return t.GetPrecursiveNodes().Reverse().ToArray();
+//            }).SingleOrDefault() ?? new Node[0];
 
-            var nodesCount = nodes?.Length ?? 0;
+            var nodesCount = nodes.Length;
 
             if (nodesCount == 0)
             {
