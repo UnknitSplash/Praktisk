@@ -2,16 +2,16 @@ using System.Collections.Generic;
 
 namespace Trie.Traversers
 {
-    internal class FinalTraverser : Traverser
+    internal class FinalTraverser<T> : Traverser<T>
     {
         private readonly NodeType _nodeType;
 
-        public FinalTraverser(Node root, NodeType nodeType) : base(root)
+        public FinalTraverser(Node<T> root, NodeType nodeType) : base(root)
         {
             _nodeType = nodeType;
         }
 
-        public override IEnumerable<Node> GetNodes()
+        public override IEnumerable<Node<T>> GetNodes()
         {
             foreach (var rootChildNode in _root)
             {
@@ -22,7 +22,7 @@ namespace Trie.Traversers
             }
         }
 
-        private IEnumerable<Node> GetChildNodes(Node node)
+        private IEnumerable<Node<T>> GetChildNodes(Node<T> node)
         {
             if (node.NodeType == (node.NodeType & _nodeType))
             {

@@ -4,15 +4,15 @@ using System.Linq;
 
 namespace Trie.Traversers
 {
-    internal abstract class Traverser
+    internal abstract class Traverser<T>
     {
-        protected readonly Node _root;
+        protected readonly Node<T> _root;
 
-        public Traverser(Node root)
+        public Traverser(Node<T> root)
         {
             _root = root;
         }
 
-        public abstract IEnumerable<Node> GetNodes();
+        public abstract IEnumerable<Node<T>> GetNodes();
     }
 }

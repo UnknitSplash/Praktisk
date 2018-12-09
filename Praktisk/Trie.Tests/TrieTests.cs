@@ -15,7 +15,7 @@ namespace Trie.Tests
             var outputWords = new List<string>();
 
             //ACT
-            var trie = new Trie(originalWords);
+            var trie = new Trie<string>(originalWords.Select(w => (w, w)));
 
             outputWords.AddRange(trie);
             //CHECK
@@ -28,12 +28,12 @@ namespace Trie.Tests
         public void Test_TrieAddItem_EnumerateAllWords(params string[] originalWords)
         {
             //PREPARE
-            var trie = new Trie(originalWords);
+            var trie = new Trie<string>(originalWords.Select(w => (w, w)));
             var newWord = "alrighty";
             var outputWords = new List<string>();
 
             //ACT
-            trie.Add(newWord);
+            trie.Add(newWord, newWord);
             outputWords.AddRange(trie.ToList());
 
             //CHECK
@@ -45,7 +45,7 @@ namespace Trie.Tests
         public void Test_TrieRemoveItem_EnumerateAllOtherWords(params string[] originalWords)
         {
             //PREPARE
-            var trie = new Trie(originalWords);
+            var trie = new Trie<string>(originalWords.Select(w => (w, w)));
             var outputWords = new List<string>();
             var wordToRemove = originalWords.Take(1).SingleOrDefault();
 
@@ -62,7 +62,7 @@ namespace Trie.Tests
         public void Test_TrieContainsItem_ReturnsTrue(params string[] originalWords)
         {
             //PREPARE
-            var trie = new Trie(originalWords);
+            var trie = new Trie<string>(originalWords.Select(w => (w, w)));
             var wordToFind = originalWords.Take(1).SingleOrDefault();
 
             //ACT
@@ -77,7 +77,7 @@ namespace Trie.Tests
         public void Test_TrieClear_EmptyTrie(params string[] originalWords)
         {
             //PREPARE
-            var trie = new Trie(originalWords);
+            var trie = new Trie<string>(originalWords.Select(w => (w, w)));
 
             //ACT
             trie.Clear();
@@ -92,7 +92,7 @@ namespace Trie.Tests
         public void Test_TrieGetByPrefix_ReturnsFirstFinalWordWithPrefix(params string[] originalWords)
         {
             //PREPARE
-            var trie = new Trie(originalWords);
+            var trie = new Trie<string>(originalWords.Select(w => (w, w)));
             var selectedWord = originalWords.FirstOrDefault(w => w.Length > 3) ?? "";
             var selectedIsEmpty = selectedWord.Length == 0;
             var outputWords = new List<string>();
@@ -101,7 +101,7 @@ namespace Trie.Tests
             var resultWord = trie.GetByPrefix(selectedWord);
 
             //CHECK
-            resultWord.Should().Be(selectedWord);
+            resultWord.Should().Be(string.IsNullOrWhiteSpace(selectedWord) ? null : selectedWord);
         }
     }
 }

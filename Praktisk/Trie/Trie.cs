@@ -6,61 +6,62 @@ using Trie.Traversers;
 
 namespace Trie
 {
-    public class Trie : ICollection<string>
+    public class Trie<T> : IEnumerable<T>
     {
-        private Node _root = NewRoot();
+        private Node<T> _root = NewRoot();
 
-        private static Node NewRoot()
+        private static Node<T> NewRoot()
         {
-            return new Node(' ', NodeType.Root, null);
+            return new Node<T>(' ', default, NodeType.Root, null);
         }
 
         private int _wordCount;
 
-        public Trie(IEnumerable<string> words)
+        public Trie(IEnumerable<(string Key, T Value)> values)
         {
-            if (words == null)
+            if (values == null)
             {
-                throw new ArgumentNullException(nameof(words));
+                throw new ArgumentNullException(nameof(values));
             }
 
-            var items = words as string[];
+            var items = values.ToArray();
 
-            for (var i = 0; i < items?.Length; i++)
+            for (var i = 0; i < items.Length; i++)
             {
-                AddWord(items[i]);
+                AddWord(items[i].Key, items[i].Value);
             }
         }
 
-        private void AddWord(string word)
+        private void AddWord(string key, T value)
         {
-            if (word.Length == 0)
+            if (key.Length == 0)
             {
-                throw new ArgumentException("Can't add an empty word.");
+                throw new ArgumentException("Can't add an empty key.");
             }
 
             var currentNode = _root;
-            for (var i = 0; i < word.Length; i++)
+            for (var i = 0; i < key.Length; i++)
             {
-                currentNode = currentNode.Children.TryGetValue(word[i], out var existingNode)
+                currentNode = currentNode.Children.TryGetValue(key[i], out var existingNode)
                     ? existingNode
-                    : currentNode.AddNode(new Node(word[i], NodeType.Intermediate, currentNode));
+                    : currentNode.AddNode(new Node<T>(key[i], default, NodeType.Intermediate, currentNode));
             }
 
             if (currentNode.NodeType != NodeType.Final)
             {
                 currentNode.NodeType = NodeType.Final;
+                currentNode.Value = value;
                 _wordCount++;
             }
         }
 
-        public IEnumerator<string> GetEnumerator()
+        public IEnumerator<T> GetEnumerator()
         {
-            var traverser = new FinalTraverser(_root, NodeType.Final);
+            var traverser = new FinalTraverser<T>(_root, NodeType.Final);
 
             foreach (var node in traverser.GetNodes())
             {
-                yield return new Word(true, node.GetPrecursiveNodes().Reverse().Select(n => n.Value));
+                yield return node.Value;
             }
         }
 
@@ -69,9 +70,9 @@ namespace Trie
             return GetEnumerator();
         }
 
-        public void Add(string item)
+        public void Add(string key, T value)
         {
-            AddWord(item);
+            AddWord(key, value);
         }
 
         public void Clear()
@@ -80,9 +81,9 @@ namespace Trie
             _wordCount = 0;
         }
 
-        public bool Contains(string item)
+        public bool Contains(string key)
         {
-            return ContainsItemOfType(item, NodeType.Final);
+            return ContainsItemOfType(key, NodeType.Final);
         }
 
         public bool ContainsPrefix(string item)
@@ -98,24 +99,24 @@ namespace Trie
             }
 
             var charArray = item.ToCharArray();
-            var traverser = new MatchingTraverser(_root, charArray, nodeType);
+            var traverser = new MatchingTraverser<T>(_root, charArray, nodeType);
             return traverser.GetNodes().Any();
         }
 
-        public string GetByPrefix(string item)
+        public T GetByPrefix(string item)
         {
             if (string.IsNullOrEmpty(item))
             {
-                return "";
+                return default;
             }
 
-            var traverser = new MatchingTraverser(_root, item.ToCharArray(), NodeType.Final);
-            return new string(traverser.GetNodes().FirstOrDefault()?.GetPrecursiveNodes().Select(t => t.Value).Reverse()
-                .ToArray());
+            var traverser = new MatchingTraverser<T>(_root, item.ToCharArray(), NodeType.Final);
+            var node = traverser.GetNodes().FirstOrDefault();
+            return node == null ? default : node.Value;
         }
 
 
-        public void CopyTo(string[] array, int arrayIndex)
+        public void CopyTo(T[] array, int arrayIndex)
         {
             using (var enumerator = GetEnumerator())
             {
@@ -134,20 +135,21 @@ namespace Trie
                 return false;
             }
 
-            var traverser = new MatchingTraverser(_root, item.ToCharArray(), NodeType.Final);
+            var traverser = new MatchingTraverser<T>(_root, item.ToCharArray(), NodeType.Final);
 
             var node =
                 traverser.GetNodes().FirstOrDefault();
+
+            if (node == null)
+            {
+                return false;
+            }
+
             node.NodeType = NodeType.Intermediate;
-            var nodes = node?.GetPrecursiveNodes().Reverse().ToArray();
-//            var nodes = node?.Select(t =>
-//            {
-//                t.NodeType = NodeType.Intermediate;
-//                return t.GetPrecursiveNodes().Reverse().ToArray();
-//            }).SingleOrDefault() ?? new Node[0];
+            var nodes = node.GetPrecursiveNodes().Reverse().ToArray();
+
 
             var nodesCount = nodes.Length;
-
             if (nodesCount == 0)
             {
                 return false;
