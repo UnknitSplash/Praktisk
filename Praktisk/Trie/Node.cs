@@ -8,28 +8,30 @@ using System.Runtime.CompilerServices;
 
 namespace Trie
 {
-    internal class Node : IEnumerable<Node>, IComparable<Node>
+    internal class Node<T> : IEnumerable<Node<T>>, IComparable<Node<T>>
     {
-        private Node _parent;
-        private readonly Dictionary<char, Node> _children = new Dictionary<char, Node>();
-        internal char Value { get; }
+        private Node<T> _parent;
+        private readonly Dictionary<char, Node<T>> _children = new Dictionary<char, Node<T>>();
+        internal char Key { get; }
+        internal T Value { get; set; }
 
         internal NodeType NodeType { get; set; }
-        internal IReadOnlyDictionary<char, Node> Children => _children;
+        internal IReadOnlyDictionary<char, Node<T>> Children => _children;
 
-        public Node(char value, NodeType nodeType, Node parent)
+        public Node(char key, T value, NodeType nodeType, Node<T> parent)
         {
             if (parent == null && nodeType != NodeType.Root)
             {
                 throw new ArgumentNullException(nameof(parent));
             }
 
+            Key = key;
             Value = value;
             NodeType = nodeType;
             _parent = parent;
         }
 
-        public IEnumerable<Node> GetPrecursiveNodes()
+        public IEnumerable<Node<T>> GetPrecursiveNodes()
         {
             var current = this;
             yield return current;
@@ -40,7 +42,7 @@ namespace Trie
             }
         }
 
-        public Node AddNode(Node node)
+        public Node<T> AddNode(Node<T> node)
         {
             if (node == null)
             {
@@ -52,18 +54,18 @@ namespace Trie
                 throw new ArgumentException("Can't add a Root Node");
             }
 
-            _children.Add(node.Value, node);
+            _children.Add(node.Key, node);
             return node;
         }
 
-        public bool RemoveNode(Node node)
+        public bool RemoveNode(Node<T> node)
         {
             if (node == null)
             {
                 throw new ArgumentNullException(nameof(node));
             }
 
-            return _children.Remove(node.Value);
+            return _children.Remove(node.Key);
         }
 
         public void RemoveParent()
@@ -71,7 +73,7 @@ namespace Trie
             _parent = null;
         }
 
-        public IEnumerator<Node> GetEnumerator()
+        public IEnumerator<Node<T>> GetEnumerator()
         {
             return _children.Values.GetEnumerator();
         }
@@ -81,27 +83,27 @@ namespace Trie
             return GetEnumerator();
         }
 
-        public int CompareTo(Node other)
+        public int CompareTo(Node<T> other)
         {
             return Equals(other) ? 0 : 1;
         }
 
         public override bool Equals(object obj)
         {
-            var node = obj as Node;
+            var node = obj as Node<T>;
 
             if (node == null)
             {
                 return false;
             }
 
-            return NodeType == node.NodeType && Value == node.Value;
+            return NodeType == node.NodeType && Key == node.Key;
         }
 
         public override int GetHashCode()
         {
             // ReSharper disable once NonReadonlyMemberInGetHashCode
-            return (int)NodeType + Value.GetHashCode() * 17;
+            return (int)NodeType + Key.GetHashCode() * 17;
         }
     }
 
